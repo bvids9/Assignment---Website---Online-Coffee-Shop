@@ -14,10 +14,16 @@ class Product(db.Model):
         str = f"ID: {self.id}, Name: {self.name}, Category: {self.category}, Description: {self.description}, Image: {self.image}, Price: {self.price} \n"
         return str
 
+orderdetails = db.Table('orderdetails',
+    db.Column('order_id', db.Integer, db.ForeignKey('orders.id'), nullable=False),
+    db.Column('product_id', db.Integer, db.ForeignKey('products.id'), nullable=False),
+    db.PrimaryKeyConstraint('order_id', 'product_id'))
+
 class Category(db.Model):
     __tablename__='categories'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
+
 
 class Order(db.Model):
     __tablename__='orders'
@@ -28,13 +34,9 @@ class Order(db.Model):
     phone = db.Column(db.String(32))
     totalcost = db.Column(db.Float)
     date = db.Column(db.DateTime)
-    products = db.relationship("Product", secondary='orderdetails', backref="orders")
+    products = db.relationship("Product", secondary=orderdetails, backref="orders")
 
     def __repr__(self):
         str = (f"ID: {self.id}, Status: {self.status}, Name: {self.name}, E-mail: {self.email}, Phone: {self.phone}, Date: {self.date}, Products: {self.product}, Total Cost: {self.totalcost} \n")
         return str
 
-orderdetails = db.Table('orderdetails',
-    db.Column('order_id', db.Integer, db.ForeignKey('orders.id'), nullable=False),
-    db.Column('product_id', db.Integer, db.ForeignKey('products.id'), nullable=False),
-    db.PrimaryKeyConstraint('order_id', 'product_id'))

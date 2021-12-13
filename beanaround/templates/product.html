@@ -6,37 +6,40 @@
 <div class="container-fluid">
     <div class="row row-cols">
         <div class="col-md-6">
-                <div class="card text-white bg-dark border-secondary" style="height: 110vh">
-                    <img class="card-body img-fluid" src="{{url_for('static', filename='images/' + item.image)}}">
-                </div>
+            <div class="card text-white bg-dark border-secondary" style="height: 110vh">
+                <img class="card-body img-fluid" src="{{url_for('static', filename='images/' + product.image)}}">
+            </div>
         </div>
         <div class="col-md-6">
             <div id="body-header" class="col" style="height: 5vh">
-            <h1 class="text-center">{{item.name}}</h1> </div>
+                <h1 class="text-center">{{product.name}}</h1>
+            </div>
 
             <!-- Product Description -->
             <div id="body-sales" class="col justify-content-center" style="height: 105vh">
-            <!-- Buying Options -->
-            <h3> Ordering</h3>
-            <form>
-                <div class="form-row col-2">
-                    <label for="sel1">Quantity:</label>
-                    <select class="form-control" id="sel1">
-                        <option>1</option>
-                        <option>2</option>
-                        <option>3</option>
-                    </select>
-                    <a class="btn btn-success mt-2" type="submit" href="#">Add Item</a>
-                </div>
-            </form>
-            <br>
-            <h4> Price: ${{item.price}} per kg </h4>
-            <h4> Description:</h4>
-            <p> {{item.description}}
-            </p>
-            <br>
+                <!-- Buying Options -->
+                <h3> Ordering</h3>
+                <form>
+                    <div class="form-row col-2">
+                        <label for="sel1">Quantity:</label>
+                        <select class="form-control" id="sel1">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                        </select>
+                    </form>
+                        <form action="{{ url_for('main.order') }}" method="POST">
+                            <input type="hidden" id="product_id" name="product_id" value="{{product.id}}">
+                            <input class="btn btn-success" type="submit" value="Add to Basket">
+                        </form>
+                    </div>
+                    <br>
+                    <h4> Price: ${{product.price}} per kg </h4>
+                    <h4> Description:</h4>
+                    <p> {{product.description}}</p>
+                    <br>
             </div>
         </div>
-    </div> 
+    </div>
 </div>
-{% endblock %}
+    {% endblock %}

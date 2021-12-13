@@ -9,6 +9,12 @@
       background-color: #D2AF84;
     }
 
+    .footer{
+      position: relative;
+      bottom: 0;
+      padding: 20px;
+    }
+
     #body-sales {
       background-color:#4d3019c0;
       color: white;

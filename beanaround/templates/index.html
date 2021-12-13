@@ -2,14 +2,14 @@
 {% set active_page = active_page|default('index') -%}
 {% block content %}
 <!-- Carousel -->
-<div id="carousel-container" class ="container">
+<div id="carousel-container" class="container">
     <div class="row">
         <div id="carousel" class="carousel slide" data-ride="carousel">
             <!-- Slideshow -->
             <div class="carousel-inner">
                 <div id="body-header" class="row justify-content-center">
                     <div class="d-flex">
-                    <h1 class="text-center">What's New</h1>
+                        <h1 class="text-center">What's New</h1>
                     </div>
                 </div>
 
@@ -17,17 +17,19 @@
                     <div class="carousel-caption">
                         <h4> Our new Iran Jaya range just released! </h4>
                         <p> Immerse yourself in the exotic flavours of the jungle</p>
-                        <a class="caption-link" href="{{url_for('main.category', catID=0)}}"> Browse now!</a>
+                        <a class="caption-link" href="{{url_for('main.categorypage', catID=1)}}"> Browse now!</a>
                     </div>
-                    <img src="{{url_for('static', filename='images/carousel1.jpg')}}" alt="Coffee Caption" class="img-thumbnail">
+                    <img src="{{url_for('static', filename='images/carousel1.jpg')}}" alt="Coffee Caption"
+                        class="img-thumbnail">
 
                 </div>
 
                 <div class="carousel-item">
                     <div class="carousel-caption mb-3">
-                    <h4> Peruvian Blend - Winner 2021 Caffeine Addict Awards </h4>
+                        <h4> Peruvian Blend - Winner 2021 Caffeine Addict Awards </h4>
                     </div>
-                    <img src="{{url_for('static', filename='images/carousel2.jpg')}}" alt="Coffee caption 2, enter now!" class="img-thumbnail">
+                    <img src="{{url_for('static', filename='images/carousel2.jpg')}}" alt="Coffee caption 2, enter now!"
+                        class="img-thumbnail">
                 </div>
             </div>
 
@@ -40,30 +42,31 @@
             </a>
         </div>
 
-<!-- Main Container -->
+        <!-- Main Container -->
 
-<div class = "container-fluid mt-3 mb-5">
-    <div id="body-header" class="row justify-content-center mt-5">
-        <div class="d-flex">
-        <h1 class="text-center">Most Popular</h1>
-        </div>
-    </div>
-    <div id="body-sales" class="row justify-content-center">
-        <div class="card-deck mr-1 ml-1 mb-3">
-            <!-- Randomly Generated products for demo purposes -->
-            {% for product in display_products%}
-            <!-- Cards with Products -->
-                <div class="card text-white bg-dark border-secondary mt-5">
-                    <div class="card-heading text-center mt-1"> {{product.name}} - ${{product.price}} </div>
-                    <img class="card-body img-fluid" src="{{url_for('static', filename='images/'+ product.image)}}">
-                    <!-- Truncate description to first 30 characters -->
-                    <p class="card-footer"> {{product.description[0:30]}}...</p>
-                    <a class="btn btn-success" type="submit" href="{{ url_for('main.product', productID=product.id)}}">See more</a>
+        <div class="container-fluid mt-3 mb-5">
+            <div id="body-header" class="row justify-content-center mt-5">
+                <div class="d-flex">
+                    <h1 class="text-center">Most Popular</h1>
                 </div>
-            {% endfor %}
-            </div> 
+            </div>
+            <div id="body-sales" class="row justify-content-center">
+                <div class="card-deck mr-1 ml-1 mb-3">
+                    <!-- Randomly Generated products for demo purposes -->
+                    {% for product in display_products%}
+                    <!-- Cards with Products -->
+                    <div class="card text-white bg-dark border-secondary mt-5">
+                        <div class="card-heading text-center mt-1"> {{product.name}} - ${{product.price}} </div>
+                        <img class="card-body img-fluid" src="{{url_for('static', filename='images/'+ product.image)}}">
+                        <!-- Truncate description to first 30 characters -->
+                        <p class="card-footer"> {{product.description[0:30]}}...</p>
+                        <a class="btn btn-success" type="submit"
+                            href="{{ url_for('main.productpage', productID=product.id)}}">See more</a>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-{% endblock %}
+    {% endblock %}

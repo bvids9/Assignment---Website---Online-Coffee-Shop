@@ -10,15 +10,14 @@
         </div>
     </div>
     <div id="body-sales" class="row justify-content-center">
-        <div class="card-deck mr-1 ml-1 mb-3">
-        
+        <div class="card-deck mr-1 ml-1 mb-3" style="min-width: 12rem; max-width = 22rem;">
         {% for product in products%}
         <!-- Cards with Products -->
             <div class="card text-white bg-dark border-secondary mt-5">
                 <div class="card-heading text-center mt-1"> {{product.name}} - ${{product.price}} </div>
                 <img class="card-body img-fluid" src="{{url_for('static', filename='images/'+ product.image)}}">
                 <p class="card-footer"> {{product.description}}</p>
-                <a class="btn btn-success" type="submit" href="{{ url_for('main.product', productID=product.id)}}">See more</a>
+                <a class="btn btn-success" type="submit" href="{{ url_for('main.productpage', productID=product.id)}}">See more</a>
             </div>
         {% endfor %}
         </div>

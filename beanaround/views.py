@@ -35,45 +35,69 @@ def contact():
 # category page routes
 # extends show function
 @bp.route('/category/<int:catID>')
-def category(catID):
+def categorypage(catID):
     products = Product.query.filter(Product.category == catID).all()
     title = Category.query.filter(Category.id == catID).first()
-    print(title.name)
-    print(products)
     return render_template('category.html', header=str(title.name), products=products)
 
 # product pages
 @bp.route('/product/<productID>')
-def product(productID):
-    #item = product1
-    item = None
-    for product in products:
-        if productID == (product.id):
-            selected_item = product
-    return render_template('product.html', item=selected_item)
+def productpage(productID):
+    product = Product.query.filter(Product.id == productID).first()
+    return render_template('product.html', product=product)
 
-@bp.route('/order/', methods=['POST', 'GET'])
+# Referred to as "Basket" to the user
+
+@bp.route('/order', methods=['POST','GET'])
 def order():
-    # check if new order
-    if 'order_id' not in session:
-        session['order_id'] = 1
+    product_id = request.values.get('product_id')
 
-    # retrieve order object
-    for x in orders:
-        if int(x.id) == int(session['order_id']):
-            order = x
-    return render_template('order.html', order=order, totalprice = order.total_cost)
+    # retrieve order if there is one
+    if 'order_id'in session.keys():
+        order = Order.query.get(session['order_id'])
+        # order will be None if order_id stale
+    else:
+        # there is no order
+        order = None
 
+    # create new order if needed
+    if order is None:
+        order = Order(status = False, name='', email='', phone='', totalcost=0, date=datetime.now())
+        try:
+            db.session.add(order)
+            db.session.commit()
+            session['order_id'] = order.id
+        except:
+            print('failed at creating a new order')
+            order = None
+    
+    # calcultate totalprice
+    totalprice = 0
+    if order is not None:
+        for product in order.products:
+            totalprice = totalprice + product.price
+    
+    # are we adding an item?
+    if product_id is not None and order is not None:
+        product = Product.query.get(product_id)
+        if product not in order.products:
+            try:
+                order.products.append(product)
+                db.session.commit()
+            except:
+                return 'There was an issue adding the item to your basket'
+            return redirect(url_for('main.order'))
+        else:
+            flash('item already in basket')
+            return redirect(url_for('main.order'))
+    
+    return render_template('order.html', order = order, totalprice = totalprice)
 
 @bp.route('/checkout/', methods=['POST', 'GET'])
 def checkout():
     form = CheckoutForm()
     if 'order_id' in session:
-        #retrieve correct order object
-        for x in orders:
-                if int(x.id) == int(session['order_id']): 
-                    order = x
-       
+        #retrieve correct order object     
         if form.validate_on_submit():
             order.status = True
             order.firstname = form.firstname.data
@@ -100,9 +124,9 @@ def deleteorderitem():
 @bp.route('/dbseed')
 def dbseed():
     # Categories
-    category1 = Category(name='coffee')
-    category2 = Category(name='machine')
-    category3 = Category(name='accessory')
+    category1 = Category(name='Coffee Beans')
+    category2 = Category(name='Machines')
+    category3 = Category(name='Accessories')
 
     try:
         db.session.add(category1)
@@ -121,11 +145,15 @@ def dbseed():
     product3 = Product(name="Breville Grinder", image="product3.jpg",\
         price=1300.45,\
         description= "Can grind and make just about anything into coffee.", category=category2.id)
+    product4 = Product(name="Grind-o-Matic", image="product4.jpg",\
+        price=350.75,\
+        description="Experience luxury. No more hand grinding.", category=category3.id)
 
     try:
         db.session.add(product1)
         db.session.add(product2)
         db.session.add(product3)
+        db.session.add(product4)
         db.session.commit()
     except:
         return 'There was an issue adding the products in the dbseed function.'
