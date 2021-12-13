@@ -1,54 +1,23 @@
 from flask import Blueprint, render_template, url_for, request, session, flash, redirect
 from datetime import datetime
 from .forms import CheckoutForm
-from .models import Product, Order
+from .models import Product, Order, Category
 from random import randint
+from . import db
 
 
 bp = Blueprint('main', __name__)
-
-# Mock Database
-product1 = Product('1', 'Coffee Beans', 'coffee', 'Aromatic Coffee', 'product1.jpg', 25.50)
-product2 = Product('2', 'Other beans', 'coffee','Very delicious', 'product2.jpg', 55.25)
-
-# machines
-product3 = Product('3', 'The Expensive Machine', 'machine', 'You are better than everyone. Now prove it.', 'product3.jpg', 3000)
-
-# accessories
-product4 = Product('4', 'Le Expensive Grinder', 'accessory', "What you think you're better than me? Nah...You are better than everyone. No really.", 'product4.jpg', 1200)
-
-products = [product1, product2, product3, product4]
-
-coffee = []
-machine = []
-accessory = []
-
-# Category Databases
-for product in products:
-    if product.category == 'coffee':
-        coffee.append(product)
-    if product.category == 'machine':
-        machine.append(product)
-    if product.category == 'accessory':
-        accessory.append(product)
-
-# Orders
-
-order1 = Order('1', False, '', '','', datetime.now(), [product1,product2], product1.price+product2.price) # simulating order not checked out
-order2 = Order('2', False, '', '','', datetime.now(), [product3], product3.price+product1.price) # simulating order not checked out
-
-orders = [order1, order2]
-
 # Routes
 
 # generic page route
 @bp.route('/')
 def index():
     # generate three random products
-    n_ran = 3
-    prod_list = products.copy()
+    prod_list = Product.query.order_by(Product.id).all()
+    print(prod_list)
     carousel_prod = []
     i = 0
+
     while i != 3:
         x = randint(0, len(prod_list)-1)
         carousel_prod.append(prod_list.pop(x))
@@ -67,15 +36,11 @@ def contact():
 # extends show function
 @bp.route('/category/<int:catID>')
 def category(catID):
-    categories = {0: 'Coffee Beans', 1: 'Machines', 2: 'Accessories'}
-    title = categories[catID]
-    if catID == 0:
-        products = coffee
-    if catID == 1:
-        products = machine
-    if catID == 2:
-        products = accessory
-    return render_template('category.html', header=str(title), products=products)
+    products = Product.query.filter(Product.category == catID).all()
+    title = Category.query.filter(Category.id == catID).first()
+    print(title.name)
+    print(products)
+    return render_template('category.html', header=str(title.name), products=products)
 
 # product pages
 @bp.route('/product/<productID>')
@@ -129,3 +94,40 @@ def deleteorder():
 def deleteorderitem():
     print('User wants to delete item with id={}'.format(request.form['id']))
     return redirect(url_for('main.index'))
+
+
+# Load Database function
+@bp.route('/dbseed')
+def dbseed():
+    # Categories
+    category1 = Category(name='coffee')
+    category2 = Category(name='machine')
+    category3 = Category(name='accessory')
+
+    try:
+        db.session.add(category1)
+        db.session.add(category2)
+        db.session.add(category3)
+        db.session.commit()
+    except:
+        return 'There was an issue adding the categories in the dbseed function.'
+    # Products
+    product1 = Product(name="Great Coffee", image="product1.jpg", \
+        price = 25.50, \
+        description= "Really awesome coffee.", category=category1.id)
+    product2 = Product(name="Really Expensive Coffee", image="product2.jpg",\
+        price=450.75,\
+        description= "Too rich for most. Prove them wrong.", category=category1.id)
+    product3 = Product(name="Breville Grinder", image="product3.jpg",\
+        price=1300.45,\
+        description= "Can grind and make just about anything into coffee.", category=category2.id)
+
+    try:
+        db.session.add(product1)
+        db.session.add(product2)
+        db.session.add(product3)
+        db.session.commit()
+    except:
+        return 'There was an issue adding the products in the dbseed function.'
+    
+    return 'DATA LOADED'

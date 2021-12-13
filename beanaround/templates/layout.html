@@ -44,9 +44,9 @@
                 <li class="nav-item dropdown {{'active' if active_page == 'category' else ''}}">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">Browse Products</a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="{{url_for('main.category', page='category', catID='0')}}">Coffee Beans</a>
-                        <a class="dropdown-item" href="{{url_for('main.category', catID='1')}}">Machines</a>
-                        <a class="dropdown-item" href="{{url_for('main.category', catID='2')}}">Accessories</a>
+                        <a class="dropdown-item" href="{{url_for('main.category', page='category', catID='1')}}">Coffee Beans</a>
+                        <a class="dropdown-item" href="{{url_for('main.category', catID='2')}}">Machines</a>
+                        <a class="dropdown-item" href="{{url_for('main.category', catID='3')}}">Accessories</a>
                     </div> 
                 </li>
                 <li class="{{'active' if active_page == 'aboutus' else 'nav-item'}}"><a class="nav-link" href="{{url_for('main.aboutus')}}">About Us</a></li>
