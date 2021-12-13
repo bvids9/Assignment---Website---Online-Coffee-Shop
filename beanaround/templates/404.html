@@ -1,0 +1,26 @@
+<html>
+    <head>
+        <title>Page Not Found</title>
+{% extends "layout.html" %}
+{% block content %}
+<!-- Main Container -->
+<div class = "container-fluid mt-3 mb-5 text-center">
+    <div id="body-header" class="row justify-content-center mt-5">
+        <div class="col-sm-12 text-center">
+            <h1 class="text-center">Page Not Found</h1>
+        </div>
+    </div>
+    <div id="body-sales" class="row justify-content-center">
+        <div class="col-sm-12 mt-3 mb-3">
+        <img src="{{url_for('static', filename='images/404_img.jpg')}}">
+        <br>
+        <br>
+        <p> Something's gone wrong...We're sorry...
+        </p>
+        <a class="btn btn-success" type="submit" href="{{ url_for('main.index')}}">Return Home</a>
+        </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+</html>

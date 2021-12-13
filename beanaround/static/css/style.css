@@ -1,0 +1,95 @@
+    /* Remove the navbar's default rounded borders and increase the bottom margin */ 
+    .navbar {
+        margin-bottom: 50px;
+        border-radius: 0;
+        background-color: #2B0F0E;
+      }
+    
+    body {
+      background-color: #D2AF84;
+    }
+
+    #body-sales {
+      background-color:#4d3019c0;
+      color: white;
+    }
+
+    #body-header{
+      background-color:#2B0F0E;
+      color: white;
+    }
+      
+    /* Remove the jumbotron's default bottom margin */ 
+    .jumbotron {
+      margin-bottom: 0;
+      color: white;
+      text-align: center;
+    }
+
+    .jumbotron-text{
+      background-color:#EFC3A4;
+      color: white;
+      padding: 10px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    /* Override Bootstrap Container-Fluid */
+    .container{
+      padding-right: 0;
+      padding-left: 0;
+      margin-right: auto;
+      margin-left: auto;
+    }
+    .container-fluid{
+      margin-right:auto;
+      margin-left:auto;
+    }
+
+    /* Carousel styling */
+    .carousel {
+      max-height: 350px;
+      width: 100%;
+    }
+
+    .carousel-inner img {
+      width: 100%;
+      min-height: 350px;
+      height: 350px;
+    }
+    .carousel-caption {
+      max-width: 100%;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.75);
+      left: 0;
+      bottom: 0;
+      color: #000000;
+    }
+
+    #carousel-container{
+      /* background:#e4c39b; */
+      width: 100%;
+      margin-right:auto;
+      margin-left:auto;
+    }
+
+    /* Link Buttons */
+    .caption-link:link, .caption-link:visited {
+      background-color:#b6835f;
+      color: white;
+      padding: 10px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+
+    }
+
+    .caption-link:hover{
+      background-color: #f8decc;
+      color: white;
+      padding: 10px 10px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }

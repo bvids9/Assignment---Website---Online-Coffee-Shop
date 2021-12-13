@@ -1,0 +1,75 @@
+{% extends "layout.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block head %}
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+        <div class="alert alert-primary" role="alert">
+        {% for message in messages %}
+            {{ message }}
+        {% endfor %}
+        </div>
+    {% endif %}
+    {% endwith %} 
+{% endblock %}
+
+
+{% block content %}
+<!-- display contents of user basket -->
+<section>  
+    <div class = "container-fluid mt-3 mb-5 text-center">
+        <div id="body-header" class="row justify-content-center mt-5">
+            <div class="col-sm-12 text-center">
+                <h1 class="text-center">Order Basket</h1>
+            </div>
+        </div>
+        <div id="body-sales" class="row justify-content-center">
+            <div class="col-sm-12 mt-3 mb-3">
+                <!-- each tour on seperate row -->
+                {% for product in order.products %}
+                    <div class="row shadow-md my-row mb-3">
+                        <div class="col-sm-10">
+                            <div id="body-sales">
+                            <h5 class="card-header">{{product.name}}</h5>
+                            <div id="body-sales" class="card-body">
+                                <div id = "body-sales" class="row">
+                                    <div class="col-2">
+                                        <img class="img-thumbnail" src="{{url_for('static', filename=('images/' + product.image))}}">
+                                    </div>
+                                        <!-- Item Description -->
+                                        <p class="card-text">Product Description: {{product.description}}</p>   
+                                </div>                      
+                            </div>
+                        </div>
+                        </div>
+                        <br><br>
+                        <!-- right column has price and delete button -->
+                        <div class="col-2">
+                            <!-- delete item button -->
+                                <h5>{{ "$%.2f"|format(product.price) }}</h5>
+                                <form method="POST" action="{{url_for('main.deleteorderitem')}}">
+                                    <input type="hidden" id="id" name="id" value="{{product.id}}">
+                                    <input type="submit" value="Delete" class="btn btn-success mb-3">
+                                </form> 
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                <!-- total price and page controls -->
+                <section>
+                    <div class="row co-12 d-flex justify-content-center">
+                        <h5 class="mt-4">Quote = {{ "$%.2f"|format(totalprice) }}</h5>
+                    </div>
+                
+                    <div class="row co-12 d-flex mt-2 mb-4 justify-content-center">
+                        <a href="{{ url_for('main.index') }}" class="btn btn-success mr-4">Home</a>
+                        <a href="{{ url_for('main.checkout') }}" class="btn btn-success mr-4">Checkout</a>
+                        <a href="{{ url_for('main.deleteorder') }}" class="btn btn-success">Empty Basket</a>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+

@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% set active_page =  'category'%}
+{% block content %}
+<!-- Main Container -->
+
+<div class = "container-fluid mt-3 mb-5">
+    <div id="body-header" class="row justify-content-center mt-5">
+        <div class="d-flex">
+        <h1 class="text-center">{{header}}</h1>
+        </div>
+    </div>
+    <div id="body-sales" class="row justify-content-center">
+        <div class="card-deck mr-1 ml-1 mb-3">
+        
+        {% for product in products%}
+        <!-- Cards with Products -->
+            <div class="card text-white bg-dark border-secondary mt-5">
+                <div class="card-heading text-center mt-1"> {{product.name}} - ${{product.price}} </div>
+                <img class="card-body img-fluid" src="{{url_for('static', filename='images/'+ product.image)}}">
+                <p class="card-footer"> {{product.description}}</p>
+                <a class="btn btn-success" type="submit" href="{{ url_for('main.product', productID=product.id)}}">See more</a>
+            </div>
+        {% endfor %}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
