@@ -30,10 +30,13 @@ def dbseed():
         price=1300.45,\
         description= "Can grind and make just about anything into coffee.", category=category2.id)
 
+    # Order
+    order1 = Order(status = False, name='', email='', phone='', totalcost=0, date=datetime.now())
     try:
         db.session.add(product1)
         db.session.add(product2)
         db.session.add(product3)
+        db.session.add(order1)
         db.session.commit()
     except:
         return 'There was an issue adding the products in the dbseed function.'

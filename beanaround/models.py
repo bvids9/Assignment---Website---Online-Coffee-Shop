@@ -17,6 +17,7 @@ class Product(db.Model):
 orderdetails = db.Table('orderdetails',
     db.Column('order_id', db.Integer, db.ForeignKey('orders.id'), nullable=False),
     db.Column('product_id', db.Integer, db.ForeignKey('products.id'), nullable=False),
+    db.Column('quantity', db.Integer),
     db.PrimaryKeyConstraint('order_id', 'product_id'))
 
 class Category(db.Model):
@@ -38,6 +39,5 @@ class Order(db.Model):
     products = db.relationship("Product", secondary=orderdetails, backref="orders")
 
     def __repr__(self):
-        str = (f"ID: {self.id}, Status: {self.status}, Name: {self.name}, E-mail: {self.email}, Phone: {self.phone}, Address: {self.address} Date: {self.date}, Products: {self.product}, Total Cost: {self.totalcost} \n")
+        str = (f"ID: {self.id}, Status: {self.status}, Name: {self.name}, E-mail: {self.email}, Phone: {self.phone}, Address: {self.address} Date: {self.date}, Products: {self.products}, Total Cost: {self.totalcost} \n")
         return str
-

@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, url_for, request, session, flash, redirect
 from datetime import datetime
 from .forms import CheckoutForm
-from .models import Product, Order, Category
+from .models import Product, Order, Category, orderdetails
 from random import randint
 from . import db
 
@@ -10,12 +10,11 @@ bp = Blueprint('main', __name__)
 # Routes
 
 # generic page route
-@bp.route('/')
+@bp.route('/', methods = ['GET', 'POST'])
 def index():
     # generate three random products
     # attach to carousel
     prod_list = Product.query.order_by(Product.id).all()
-    print(prod_list)
     carousel_prod = []
     i = 0
 
@@ -45,18 +44,20 @@ def categorypage(catID):
 @bp.route('/product/<productID>')
 def productpage(productID):
     product = Product.query.filter(Product.id == productID).first()
-    return render_template('product.html', product=product)
+    data = range(1, 21)
+    return render_template('product.html', product=product, data=data)
 
 # Referred to as "Basket" to the user
 
 @bp.route('/order', methods=['POST','GET'])
 def order():
-    product_id = request.values.get('product_id')
+    product_id = request.form.get('product_id')
+    sel_quantity = request.form.get('selection_qty')
 
     # retrieve order if there is one
     if 'order_id'in session.keys():
         order = Order.query.get(session['order_id'])
-        # order will be None if order_id stale
+        print(order)
     else:
         # there is no order
         order = None
@@ -76,7 +77,7 @@ def order():
     totalprice = 0
     if order is not None:
         for product in order.products:
-            totalprice = totalprice + product.price
+            totalprice = totalprice + (product.price)
     
     # are we adding an item?
     if product_id is not None and order is not None:
@@ -134,7 +135,6 @@ def deleteorderitem():
         except:
             return 'Problem deleting item from order'
     return redirect(url_for('main.order'))
-
 
 # Load Database function
 @bp.route('/dbseed')

@@ -20,10 +20,17 @@
                 <!-- Buying Options -->
                 <h3> Order Now</h3>
                 <form action="{{ url_for('main.order') }}" method="POST">
-                    <input type="hidden" id="product_id" name="product_id" value="{{product.id}}">
-                    <input class="btn btn-success" type="submit" value="Add to Basket">
+                    <div class="form-row col-2">
+                        <label for="sel1">Quantity:</label>
+                        <select class="selectpicker form-control" id="sel1" name="selection_qty">
+                            {% for num in data %}
+                            <option value="{{num}}"> {{num}} </option>
+                            {% endfor %}
+                        </select>
+                        <input type="hidden" id="product_id" name="product_id" value="{{product.id}}">
+                        <input type="hidden" id="product_id" name="product_id" value="selection_qty">
+                        <input class="btn btn-success" type="submit" value="Add to Basket">
                 </form>
-
                 <br>
                 <h4> Price: ${{product.price}} per kg </h4>
                 <h4> Description:</h4>
