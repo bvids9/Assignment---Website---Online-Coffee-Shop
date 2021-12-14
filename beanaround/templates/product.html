@@ -19,20 +19,20 @@
             <div id="body-sales" class="col justify-content-center" style="height: 105vh">
                 <!-- Buying Options -->
                 <h3> Ordering</h3>
-                <form>
+                <form action="{{ url_for('main.order') }}" method="POST">
                     <div class="form-row col-2">
                         <label for="sel1">Quantity:</label>
-                        <select class="form-control" id="sel1">
-                            <option>1</option>
-                            <option>2</option>
-                            <option>3</option>
+                        <select class="form-control" id="sel1" name="quantity">
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
                         </select>
-                    </form>
-                        <form action="{{ url_for('main.order') }}" method="POST">
+                        <form>
                             <input type="hidden" id="product_id" name="product_id" value="{{product.id}}">
                             <input class="btn btn-success" type="submit" value="Add to Basket">
                         </form>
                     </div>
+                </form>
                     <br>
                     <h4> Price: ${{product.price}} per kg </h4>
                     <h4> Description:</h4>

@@ -15,9 +15,19 @@ class Product(db.Model):
         return str
 
 orderdetails = db.Table('orderdetails',
-    db.Column('order_id', db.Integer, db.ForeignKey('orders.id'), nullable=False),
+    db.Column('order_id', db.Integer, db.ForeignKey('orderitems.id'), nullable=False),
     db.Column('product_id', db.Integer, db.ForeignKey('products.id'), nullable=False),
     db.PrimaryKeyConstraint('order_id', 'product_id'))
+
+'''''''''''''''''
+class OrderItem(db.Model):
+    __tablename__="orderitems"
+    id = db.Column(db.Integer, primary_key=True)
+    order_id = db.Column('order_id', db.Integer, db.ForeignKey('orders.id'), nullable=False)
+    product_id = db.Column('product_id', db.Integer, db.ForeignKey('products.id'), nullable=False)
+    products = db.relationship("Product", secondary=orderdetails, backref="orderitems")
+    quantity= db.Column(db.Integer, nullable=False)
+'''''''''''''''''
 
 class Category(db.Model):
     __tablename__='categories'
@@ -34,9 +44,8 @@ class Order(db.Model):
     phone = db.Column(db.String(32))
     totalcost = db.Column(db.Float)
     date = db.Column(db.DateTime)
-    products = db.relationship("Product", secondary=orderdetails, backref="orders")
+    orderitems = db.relationship("OrderItem", backref='orders', uselist=True)
 
     def __repr__(self):
-        str = (f"ID: {self.id}, Status: {self.status}, Name: {self.name}, E-mail: {self.email}, Phone: {self.phone}, Date: {self.date}, Products: {self.product}, Total Cost: {self.totalcost} \n")
+        str = (f"ID: {self.id}, Status: {self.status}, Name: {self.name}, E-mail: {self.email}, Phone: {self.phone}, Date: {self.date}, OrdersItems: {self.orderitems}, Total Cost: {self.totalcost} \n")
         return str
-
