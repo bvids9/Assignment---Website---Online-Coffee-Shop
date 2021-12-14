@@ -1,9 +1,8 @@
 from flask import Blueprint, render_template, url_for, request, session, flash, redirect
 from datetime import datetime
 from .forms import CheckoutForm
-from .models import Product, Order, Category, OrderItem
+from .models import Product, Order, Category
 from random import randint
-from sqlalchemy import select, text
 from . import db
 
 
@@ -14,7 +13,9 @@ bp = Blueprint('main', __name__)
 @bp.route('/')
 def index():
     # generate three random products
+    # attach to carousel
     prod_list = Product.query.order_by(Product.id).all()
+    print(prod_list)
     carousel_prod = []
     i = 0
 
@@ -50,14 +51,7 @@ def productpage(productID):
 
 @bp.route('/order', methods=['POST','GET'])
 def order():
-
     product_id = request.values.get('product_id')
-    product_qty = request.values.get('quantity')
-
-    # Translate get requests into corresponding objects.
-    product = Product.query.get(product_id)
-    order_item = OrderItem(product_id=product_id, quantity=product_qty)
-
 
     # retrieve order if there is one
     if 'order_id'in session.keys():
@@ -81,29 +75,24 @@ def order():
     # calcultate totalprice
     totalprice = 0
     if order is not None:
-        for orderitem in order.orderitems:
-            quantity = orderitem.quantity
-            for product in orderitem.products:
-                # print(f"Product in Price Loop: {product.name}")
-                totalprice = totalprice + product.price*quantity
+        for product in order.products:
+            totalprice = totalprice + product.price
     
     # are we adding an item?
     if product_id is not None and order is not None:
-        # quantity
-        db.session.add(order_item)
-        if order_item not in order.orderitems:
+        product = Product.query.get(product_id)
+        if product not in order.products:
             try:
-                order_item.products.append(product)
-                order.orderitems.append(order_item)
+                order.products.append(product)
                 db.session.commit()
             except:
-                db.session.rollback()
                 return 'There was an issue adding the item to your basket'
             return redirect(url_for('main.order'))
         else:
             flash('item already in basket')
             return redirect(url_for('main.order'))
-    return render_template('order.html', order = order, totalprice = totalprice, quantity=product_qty)
+    
+    return render_template('order.html', order = order, totalprice = totalprice)
 
 @bp.route('/checkout/', methods=['POST', 'GET'])
 def checkout():
@@ -112,12 +101,18 @@ def checkout():
         #retrieve correct order object     
         if form.validate_on_submit():
             order.status = True
-            order.firstname = form.firstname.data
-            order.surname = form.surname.data
+            order.name = form.name.data
             order.email = form.email.data
             order.phone = form.phone.data
-            # print(order)
-            flash('Thank you! Your order will be shipped soon!')
+            order.address = form.address.data
+            order.date = datetime.now()
+            try:
+                db.session.commit()
+                del session['order_id']
+                flash('Thank you! Your order will be shipped soon!')
+                return redirect(url_for('main.index'))
+            except:
+                return('There was an issue completing your order.')
     return render_template('checkout.html', form = form)
 
 @bp.route('/deleteorder')
@@ -131,15 +126,14 @@ def deleteorderitem():
     id=request.form['id']
     if 'order_id' in session:
         order = Order.query.get_or_404(session['order_id'])
-        line_item = order.orderitems
-        product_to_delete = Product.query.get(id)
+        item_to_delete = Product.query.get(id)
         try:
-            line_item.products.remove(product_to_delete)
+            order.products.remove(item_to_delete)
             db.session.commit()
             return redirect(url_for('main.order'))
         except:
             return 'Problem deleting item from order'
-    return redirect(url_for('main.index'))
+    return redirect(url_for('main.order'))
 
 
 # Load Database function
